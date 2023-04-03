@@ -3,8 +3,10 @@ import torch
 import pandas as pd
 import numpy as np
 import json
+import click
+from tabulate import tabulate
 
-from main import Parameters
+from utils import Parameters
 from models import _netF
 from MyDataLoader import MyDataLoader
 from edRVFL import EnsembleDeepRVFL
@@ -16,17 +18,6 @@ from sklearn.preprocessing import MinMaxScaler, StandardScaler
 
 import warnings
 warnings.filterwarnings('ignore')
-
-
-num_nodes = 128  # Number of enhancement nodes.
-regular_para = 1  # Regularization parameter.
-weight_random_range = [-10, 10]  # Range of random weights.
-bias_random_range = [0, 10]  # Range of random weights.
-num_layer = 32  # Number of hidden layersNumber of hidden layers
-HVSEED = [8379, 4384, 4325, 9330, 1658, 2477, 7010, 4081, 2921, 2871]
-UTSSEED = [9658, 181, 6133, 5714, 722, 3614, 5065, 6625, 4900, 8080]
-ELSEED = [3062, 1903, 3843, 1830, 7819, 5986, 8377, 4332, 189, 9718]
-
 NORMAL = False
 SCALER = MinMaxScaler
 
@@ -44,7 +35,8 @@ def modelHelper(model, x_train, x_test, y_train, y_test, scaler_t):
     return r2, mse, mape
 
 
-def models_run(features_f, y, seeds):
+def models_run(features_f, y, seeds,  num_nodes, regular_para,
+               weight_random_range, bias_random_range, num_layer):
     if NORMAL:
         scaler_f = SCALER()
         features_f = scaler_f.fit_transform(features_f)
@@ -60,7 +52,7 @@ def models_run(features_f, y, seeds):
     k_fold_result['mse'] = []
     k_fold_result['mape'] = []
     ave_fold = {}
-    for index, train, test in enumerate(kfold):
+    for index, (train, test) in enumerate(kfold):
         model_edRVFL = EnsembleDeepRVFL(n_nodes=num_nodes, lam=regular_para, w_random_vec_range=weight_random_range,
                                         b_random_vec_range=bias_random_range, activation='relu', n_layer=num_layer, random_seed=seeds[index], same_feature=False, task_type='regression')
         r2, mse, mape = modelHelper(
@@ -75,21 +67,20 @@ def models_run(features_f, y, seeds):
     return ave_fold, k_fold_result
 
 
-def main():
-    opt = Parameters(batchSize=512, imageSize=(24, 21), nz=32, ngf=64, ndf=64,
-                     nepochs=5000, lr=0.00008, beta1=0.8, gpu=-1, adv_weight=1.5,
-                     lrd=0.0001, alpha=0.1, outf='results')
+def get_report(opt, num_nodes, regular_para,
+               weight_random_range, bias_random_range, num_layer):
     target_names = {
         './Data/HV_O_data.csv': 'Hardness (HV)', './Data/UTS_HT_ALL.csv': 'UTS', './Data/EL_HT_ALL.csv': 'EL'}
-    img_files = {'./Data/HV_O_data.csv': './Data/Imgs/Schedule_HV.csv', './Dat/UTS_HT_ALL.csv':
-                 '../Data/Imgs/Schedule_HT_ALL.csv',  '../Data/New Data/EL_HT_ALL.csv': '../Data/Imgs/Schedule_HT_ALL.csv'}
+    img_files = {'./Data/HV_O_data.csv': './Data/Imgs/Schedule_HV.csv',
+                 './Data/UTS_HT_ALL.csv': './Data/Imgs/Schedule_HT_ALL.csv',
+                 './Data/EL_HT_ALL.csv': './Data/Imgs/Schedule_HT_ALL.csv'}
 
-    file_s = '../Data/HV_O_data.csv'
+    file_s = './Data/HV_O_data.csv'
     file_t = './Data/UTS_HT_ALL.csv'
     all_result = {}
 
     # Model
-   
+
     if torch.cuda.is_available():
         opt.gpu = 1
         model = _netF(opt)
@@ -97,7 +88,8 @@ def main():
     else:
         opt.gpu = -1
         model = _netF(opt)
-        model.load_state_dict(torch.load('./CheckPoints/F.pt'), map_location=torch.device('cpu'))
+        model.load_state_dict(torch.load('./CheckPoints/F.pt'),
+                              map_location=torch.device('cpu'))
     model.double()
 
     # Data
@@ -107,29 +99,37 @@ def main():
         if_norm=True)
 
     # Source Domain HV
+    print('-----------------HV Training-----------------\n')
     source_domain_y = source_domain_y.numpy()
     out_src = model(source_domain_x)
     feature_src = out_src.cpu().detach().numpy()
     features_o_src = original_data_src.drop(
         columns=[target_names[file_s], 'class']).values
     features_f_src = np.hstack((features_o_src, feature_src))
-    ave_result_src, detail_result_src = models_run(features_f=features_f_src, y=source_domain_y)
+    ave_result_src, detail_result_src = models_run(features_f_src, source_domain_y, HVSEED,  num_nodes, regular_para,
+                                                   weight_random_range, bias_random_range, num_layer)
     all_result['HV'] = {'ave': ave_result_src, 'detail': detail_result_src}
+    score_temp = ave_result_src['ave_score']
+    print(f'-----------------HV R2 {score_temp}-----------------\n\n')
 
     # Target Domain UTS and EL
     # UTS
+    print('-----------------UTS Training-----------------\n')
     target_domain_y = target_domain_y.numpy()
     out_tgt = model(target_domain_x)
     feature_tgt = out_tgt.cpu().detach().numpy()
     features_o_tgt = pd.read_csv(file_t).drop(
         columns=[target_names[file_t], 'class']).values
     features_f_tgt = np.hstack((features_o_tgt, feature_tgt))
-    ave_result_tgt, detail_result_tgt = models_run(
-        features_f=features_f_tgt, y=target_domain_y)
+    ave_result_tgt, detail_result_tgt = models_run(features_f_tgt, target_domain_y, UTSSEED,  num_nodes, regular_para,
+                                                   weight_random_range, bias_random_range, num_layer)
     all_result['UTS'] = {'ave': ave_result_tgt, 'detail': detail_result_tgt}
+    score_temp = ave_result_tgt['ave_score']
+    print(f'-----------------HV R2 {score_temp}-----------------\n\n')
 
     # EL
-    file_EL = '../Data/New Data/EL_HT_ALL.csv'
+    print('-----------------EL Training-----------------\n')
+    file_EL = './Data/EL_HT_ALL.csv'
     EL_x = pd.read_csv(img_files[file_EL]).astype('double').values
     EL_x = torch.from_numpy(EL_x).reshape(-1, 1, 24, 21)
     EL_data = pd.read_csv(file_EL)
@@ -138,14 +138,60 @@ def main():
     out_EL = model(EL_x)
     feature_EL = out_EL.cpu().detach().numpy()
     features_f_EL = np.hstack((features_o_EL, feature_EL))
-    ave_result_EL, detail_result_EL = models_run(
-        features_f=features_f_EL, y=EL_y)
+    ave_result_EL, detail_result_EL = models_run(features_f_EL, EL_y, ELSEED, num_nodes, regular_para,
+                                                 weight_random_range, bias_random_range, num_layer)
     all_result['EL'] = {'ave': ave_result_EL, 'detail': detail_result_EL}
+    score_temp = ave_result_EL['ave_score']
+    print(f'-----------------HV R2 {score_temp}-----------------\n\n')
 
     return all_result
 
-if __name__ == '__main__':
+
+HVSEED = [8379, 4384, 4325, 9330, 1658, 2477, 7010, 4081, 2921, 2871]
+UTSSEED = [9658, 181, 6133, 5714, 722, 3614, 5065, 6625, 4900, 8080]
+ELSEED = [3062, 1903, 3843, 1830, 7819, 5986, 8377, 4332, 189, 9718]
+
+
+@click.command()
+@click.option('--batch_size', type=int, default=512, help='BatchSize of AAEG Training process')
+@click.option('--nz', type=int,  default=64, help='Noise size used in G-generated images')
+@click.option('--ngf', type=int,  default=64, help='Size of F-network output')
+@click.option('--ndf', type=int,  default=64, help='D network extraction feature output size')
+@click.option('--nepochs', type=int, default=5000, help='Numbers of training epochs')
+@click.option('--lr', type=float,  default=0.00008, help='Learning rate')
+@click.option('--beta1', type=float, default=0.8, help='bate1')
+@click.option('--gpu', type=int, default=1, help='If use GPU for training of testing. 1--used, -1--not used')
+@click.option('--adv_weight', type=float, default=1.5, help='adv_weight')
+@click.option('--lrd', type=float, default=0.0001, help='Learning rate decay value')
+@click.option('--alpha', type=float,  default=0.1, help='alpha')
+@click.option('--out_path', type=str, default='./results', help='Output path')
+@click.option('--num_nodes', type=int, default=128, help='Number of nodes per layer of edRVFL model')
+@click.option('--regular_para', type=float, default=1, help='Regularization parameter. of edRVFL model')
+@click.option('--weight_random_range', type=int,  default=10, help='Range of random weights')
+@click.option('--bias_random_range', type=int, default=10, help='Range of random bias')
+@click.option('--num_layer', type=int,  default=32, help='Number of hidden layersNumber of hidden layers')
+@click.option('--save_path', type=str,  default=None, help='The predict score result save path')
+def main(batch_size, nz, ngf, ndf, nepochs, lr, beta1, gpu, adv_weight,
+         lrd, alpha, out_path, num_nodes, regular_para,
+         weight_random_range, bias_random_range,
+         num_layer, save_path):
+    opt = Parameters(batchSize=batch_size, imageSize=(24, 21), nz=nz, ngf=ngf, ndf=ndf,
+                     nepochs=nepochs, lr=lr, beta1=beta1, gpu=gpu, adv_weight=adv_weight,
+                     lrd=lrd, alpha=alpha, outf=out_path)
     
-    print(main())
-    # with open(f'./results/T_D_contact_HT_ALL_RVS.json', 'w') as f:
-    #     f.write(json.dumps(all_result))
+    weight_random_ranges = [-weight_random_range, weight_random_range]
+    bias_random_ranges = [0, bias_random_range]
+    result = get_report(opt, num_nodes, regular_para,
+                        weight_random_ranges, bias_random_ranges, num_layer)
+
+    out_result = [ ['HV', result['HV']['ave']['ave_score'], result['HV']['ave']['ave_mape'], result['HV']['ave']['ave_mse']],
+    ['UTS',  result['UTS']['ave']['ave_score'], result['UTS']['ave']['ave_mape'], result['UTS']['ave']['ave_mse']],
+    ['EL', result['EL']['ave']['ave_score'], result['EL']['ave']['ave_mape'], result['EL']['ave']['ave_mse']]]
+
+    print(tabulate(out_result, headers=['Performance', 'R2', 'MAPE', 'MSE']))
+    if save_path:
+        with open(save_path, 'w') as f:
+            f.write(json.dumps(result))
+
+if __name__ == '__main__':
+    main()

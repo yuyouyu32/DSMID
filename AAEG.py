@@ -4,24 +4,7 @@ from Trainer import Trainer
 import os
 import json
 import torch.utils.data as Data
-
-class Parameters(object):
-    def __init__(self, batchSize=512, imageSize=(24, 21), nz=512, ngf=64, ndf=64, 
-                       nepochs=1500, lr=0.0001, beta1=0.8, gpu=1, adv_weight=0.1,
-                       lrd=0.0001, alpha=0.3, outf='results', f_emb=8) -> None:
-        self.batchSize=batchSize
-        self.imageSize=imageSize
-        self.nz=nz      # size of the latent z vector
-        self.ngf=ngf    # Number of filters to use in the generator network
-        self.ndf=ndf    # Number of filters to use in the discriminator network
-        self.nepochs=nepochs
-        self.lr=lr
-        self.beta1=beta1    # beta1 for adam. default=0.5
-        self.gpu=gpu        # GPU to use, -1 for CPU training
-        self.adv_weight=adv_weight  # weight for adv loss
-        self.lrd=lrd    # learning rate decay, default=0.0001
-        self.alpha=alpha    # multiplicative factor for target adv. loss
-        self.outf=outf
+from utils import Parameters
 
 
 if __name__ == '__main__':
@@ -30,9 +13,6 @@ if __name__ == '__main__':
                        lrd=0.0001, alpha=0.1, outf='results')
     mean = np.array([0.44, 0.44, 0.44])
     std = np.array([0.19, 0.19, 0.19])
-    # target_names = {'../Data/HV_O_data.csv': 'Hardness (HV)', '../Data/UTS_O_data.csv': 'UTS (MPa)', '../Data/UTS_2_O_data.csv': 'UTS', '../Data/UTS_all_O_data.csv': 'UTS (MPa)', '../Data/UTS_HT_O_data.csv': 'UTS'}
-    # img_files = {'../Data/HV_O_data.csv': '../Data/Schedule_HV.csv', '../Data/UTS_O_data.csv': '../Data/Schedule_UTS.csv', '../Data/UTS_2_O_data.csv':  '../Data/Schedule_UTS_2.csv', '../Data/UTS_all_O_data.csv': '../Data/Schedule_UTS_all.csv', '../Data/UTS_HT_O_data.csv': '../Data/Schedule_UTS_HT.csv'}
-    # checkpoint_names = {'../Data/UTS_O_data.csv': 'HV-UTS-1', '../Data/UTS_2_O_data.csv': 'HV-UTS-2', '../Data/UTS_all_O_data.csv': 'HV-UTS-all', '../Data/UTS_HT_O_data.csv': 'HV-UTS-HT'}
     target_names = {'../Data/HV_O_data.csv': 'Hardness (HV)', '../Data/New Data/UTS_HT_ALL.csv': 'UTS'}
     img_files =  {'../Data/HV_O_data.csv': '../Data/Schedule_HV.csv', '../Data/New Data/UTS_HT_ALL.csv': '../Data/New Data/Schedule_HT_ALL.csv'}
     checkpoint_names = {'../Data/New Data/UTS_HT_ALL.csv': 'UTS_HT_ALL'}

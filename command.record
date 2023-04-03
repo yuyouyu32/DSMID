@@ -1,0 +1,1 @@
+python eval.py --batch_size 512 --nz 64 --ngf 64 --ndf 64 --nepochs 5000 --lr 0.00008 --beta1 0.8 --gpu 1 --adv_weight 1.5 --lrd 0.0001 --alpha 0.1 --out_path './results' --num_nodes 128 --regular_para 1 --weight_random_range 10 --bias_random_range 10 --num_layer 32 --save_path './eval_results.json'
