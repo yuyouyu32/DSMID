@@ -3,5 +3,3 @@ python eval.py --batch_size 512 --nz 64 --ngf 64 --ndf 64 --nepochs 5000 --lr 0.
 python AAEG.py --batch_size 512 --nz 512 --ngf 64 --ndf 64 --nepochs 5000 --lr 0.00008 --beta1 0.8 --gpu 1 --adv_weight 1.5 --lrd 0.0001 --alpha 0.1 --earlystop_patience 200 --model_save_path './Checkpoints' --logs_path './Logs' --bucket_result_path './bucket_result.json'
 
 tensorboard --logdir='./Logs_Pre'
-
-pip install -r requirement.txt (torch==1.10.0+cu113)

@@ -137,8 +137,8 @@ class MyDataLoader:
 
 
 if __name__ == '__main__':
-    dataloader = MyDataLoader(source_img='../Data/Schedule_HV.csv', orginal_data='../Data/HV_O_data.csv', targets='Hardness (HV)',
-                              target_img='../Data/Schedule_UTS.csv', target_data='../Data/UTS_O_data.csv', t_target='UTS (MPa)')
-    source_domain_x, source_domain_y, source_domain_class, target_domain_x, target_domain_y, target_domain_class = dataloader.get_dataset()
+    dataloader = MyDataLoader(source_img='./Data/Imgs/Schedule_HV.csv', orginal_data='./Data/HV_O_data.csv', targets='Hardness (HV)',
+                          target_img='./Data/Imgs/Schedule_UTS.csv', target_data='./Data/UTS_HT_ALL.csv', t_target='UTS')
+    source_domain_x, source_domain_y, source_domain_class, target_domain_x, target_domain_y, target_domain_class = dataloader.get_dataset(if_norm=True, get_scaler=False)
     print(source_domain_x.shape, source_domain_y.shape, source_domain_class.shape)
     print(target_domain_x.shape, target_domain_y.shape, target_domain_class.shape)

@@ -7,6 +7,9 @@ import torch.utils.data as Data
 from utils import Parameters
 import click
 
+import warnings
+warnings.filterwarnings('ignore')
+
 
 @click.command()
 @click.option('--batch_size', type=int, default=512, help='BatchSize of AAEG Training process')
