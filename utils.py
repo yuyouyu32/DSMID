@@ -4,7 +4,7 @@ from torch.nn import init
 class Parameters(object):
     def __init__(self, batchSize=512, imageSize=(24, 21), nz=512, ngf=64, ndf=64, 
                        nepochs=1500, lr=0.0001, beta1=0.8, gpu=1, adv_weight=0.1,
-                       lrd=0.0001, alpha=0.3, outf='results', f_emb=8) -> None:
+                       lrd=0.0001, alpha=0.3) -> None:
         self.batchSize=batchSize
         self.imageSize=imageSize
         self.nz=nz      # size of the latent z vector
@@ -17,7 +17,6 @@ class Parameters(object):
         self.adv_weight=adv_weight  # weight for adv loss
         self.lrd=lrd    # learning rate decay, default=0.0001
         self.alpha=alpha    # multiplicative factor for target adv. loss
-        self.outf=outf
 
 def weights_init(m):
 	classname = m.__class__.__name__

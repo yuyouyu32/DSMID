@@ -68,7 +68,7 @@ def models_run(features_f, y, seeds,  num_nodes, regular_para,
 
 
 def get_report(opt, num_nodes, regular_para,
-               weight_random_range, bias_random_range, num_layer):
+               weight_random_range, bias_random_range, num_layer, model_path):
     target_names = {
         './Data/HV_O_data.csv': 'Hardness (HV)', './Data/UTS_HT_ALL.csv': 'UTS', './Data/EL_HT_ALL.csv': 'EL'}
     img_files = {'./Data/HV_O_data.csv': './Data/Imgs/Schedule_HV.csv',
@@ -84,11 +84,11 @@ def get_report(opt, num_nodes, regular_para,
     if torch.cuda.is_available():
         opt.gpu = 1
         model = _netF(opt)
-        model.load_state_dict(torch.load('./CheckPoints/F.pt'))
+        model.load_state_dict(torch.load(model_path))
     else:
         opt.gpu = -1
         model = _netF(opt)
-        model.load_state_dict(torch.load('./CheckPoints/F.pt'),
+        model.load_state_dict(torch.load(model_path),
                               map_location=torch.device('cpu'))
     model.double()
 
@@ -159,30 +159,30 @@ ELSEED = [3062, 1903, 3843, 1830, 7819, 5986, 8377, 4332, 189, 9718]
 @click.option('--ndf', type=int,  default=64, help='D network extraction feature output size')
 @click.option('--nepochs', type=int, default=5000, help='Numbers of training epochs')
 @click.option('--lr', type=float,  default=0.00008, help='Learning rate')
-@click.option('--beta1', type=float, default=0.8, help='bate1')
+@click.option('--beta1', type=float, default=0.8, help='beta1 for adam.')
 @click.option('--gpu', type=int, default=1, help='If use GPU for training of testing. 1--used, -1--not used')
-@click.option('--adv_weight', type=float, default=1.5, help='adv_weight')
+@click.option('--adv_weight', type=float, default=1.5, help='weight for adv loss')
 @click.option('--lrd', type=float, default=0.0001, help='Learning rate decay value')
-@click.option('--alpha', type=float,  default=0.1, help='alpha')
-@click.option('--out_path', type=str, default='./results', help='Output path')
+@click.option('--alpha', type=float,  default=0.1, help='multiplicative factor for target adv. loss')
 @click.option('--num_nodes', type=int, default=128, help='Number of nodes per layer of edRVFL model')
 @click.option('--regular_para', type=float, default=1, help='Regularization parameter. of edRVFL model')
 @click.option('--weight_random_range', type=int,  default=10, help='Range of random weights')
 @click.option('--bias_random_range', type=int, default=10, help='Range of random bias')
 @click.option('--num_layer', type=int,  default=32, help='Number of hidden layersNumber of hidden layers')
 @click.option('--save_path', type=str,  default=None, help='The predict score result save path')
+@click.option('--model_path', type=str,  default='./CheckPoints_Pre/F.pt', help='Pre-Trained F newtwork .pt file path')
 def main(batch_size, nz, ngf, ndf, nepochs, lr, beta1, gpu, adv_weight,
-         lrd, alpha, out_path, num_nodes, regular_para,
+         lrd, alpha, num_nodes, regular_para,
          weight_random_range, bias_random_range,
-         num_layer, save_path):
+         num_layer, save_path, model_path):
     opt = Parameters(batchSize=batch_size, imageSize=(24, 21), nz=nz, ngf=ngf, ndf=ndf,
                      nepochs=nepochs, lr=lr, beta1=beta1, gpu=gpu, adv_weight=adv_weight,
-                     lrd=lrd, alpha=alpha, outf=out_path)
+                     lrd=lrd, alpha=alpha)
     
     weight_random_ranges = [-weight_random_range, weight_random_range]
     bias_random_ranges = [0, bias_random_range]
     result = get_report(opt, num_nodes, regular_para,
-                        weight_random_ranges, bias_random_ranges, num_layer)
+                        weight_random_ranges, bias_random_ranges, num_layer, model_path)
 
     out_result = [ ['HV', result['HV']['ave']['ave_score'], result['HV']['ave']['ave_mape'], result['HV']['ave']['ave_mse']],
     ['UTS',  result['UTS']['ave']['ave_score'], result['UTS']['ave']['ave_mape'], result['UTS']['ave']['ave_mse']],
