@@ -18,7 +18,7 @@ To install the package using pip, first ensure that pip is installed on your sys
 It is noteworthy that we utilized `NVIDIA's V100 GPU` during our training process, with a CUDA version of `11.3` and a pytorch version of `1.10.0`. It was not possible to correctly identify the specific versions of torch and cuda via the `pip install -r` command, so we provided supplementary pip installation instructions for torch. However, users also have the option to select a pytorch version corresponding to their own CUDA version.
 
 ``` shell
-> pip install -r requirement.txt
+> pip install -r requirements.txt
 # CUDA 11.3 & torch 1.10.0
 > pip install torch==1.10.0+cu113 torchvision==0.11.0+cu113 torchaudio==0.10.0 -f https://download.pytorch.org/whl/torch_stable.html
 ```
