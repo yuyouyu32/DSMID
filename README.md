@@ -1,6 +1,7 @@
 # AAEG
 
 ***Paper title: Adversarial Domain Adaptive Embedding Generative Network: Transfer learning between different properties of HEAs***
+![AAEG Framework](./imgs/AAEG.png)
 
 ### Highlight
 
@@ -40,6 +41,8 @@ print(target_domain_x.shape, target_domain_y.shape, target_domain_class.shape)
 ```
 
 ## Train
+
+![AAEG structure](./imgs/network.png)
 
 The training process for AAEG can be initiated by using the command `python AAEG.py --para xx`, where the parameter `--para` can be utilized to set corresponding training parameters. The relevant training options can be viewed using the `--help` guide.
 
