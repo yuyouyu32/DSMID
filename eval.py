@@ -32,7 +32,7 @@ def modelHelper(model, x_train, x_test, y_train, y_test, scaler_t):
         y_pred = scaler_t.inverse_transform(y_pred.reshape(-1, 1))
         y_test = scaler_t.inverse_transform(y_test)
     mse = mean_squared_error(y_test, y_pred)
-    return r2, mse, mape
+    return r2, mse, mape, y_pred
 
 
 def models_run(features_f, y, seeds,  num_nodes, regular_para,
@@ -51,15 +51,19 @@ def models_run(features_f, y, seeds,  num_nodes, regular_para,
     k_fold_result['scores'] = []
     k_fold_result['mse'] = []
     k_fold_result['mape'] = []
+    k_fold_result['y_pred'] = []
+    k_fold_result['y_test'] = []
     ave_fold = {}
     for index, (train, test) in enumerate(kfold):
         model_edRVFL = EnsembleDeepRVFL(n_nodes=num_nodes, lam=regular_para, w_random_vec_range=weight_random_range,
                                         b_random_vec_range=bias_random_range, activation='relu', n_layer=num_layer, random_seed=seeds[index], same_feature=False, task_type='regression')
-        r2, mse, mape = modelHelper(
+        r2, mse, mape, y_pred = modelHelper(
             model_edRVFL, features_f[train], features_f[test], y[train], y[test], scaler_t)
         k_fold_result['scores'].append(r2)
         k_fold_result['mse'].append(mse)
         k_fold_result['mape'].append(mape)
+        k_fold_result['y_pred'].extend(y_pred)
+        k_fold_result['y_test'].extend(y[test])
 
     ave_fold['ave_score'] = np.mean(k_fold_result['scores'])
     ave_fold['ave_mse'] = np.mean(k_fold_result['mse'])
