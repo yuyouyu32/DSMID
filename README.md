@@ -1,6 +1,6 @@
 # AAEG
 
-***Paper title: Adversarial Domain Adaptive Embedding Generative Network: Transfer learning between different properties of HEAs***
+***Paper title: From Adversarial Embedding to Large Language Model Screening: A Dual-Strategy for Inverse Design of High Entropy Alloys***
 ![AAEG Framework](./imgs/AAEG.png)
 
 ### Highlight
@@ -8,7 +8,7 @@
 - **Expanded statistics on elements were used to densify sparse material composition matrices and align constituent features of the source and target domains.**
 - **A coupled feature representation and adversarial generation domain adaptation network was proposed to narrow the domain shift between various target performance HEAs datasets.**
 - **Covariance distance and residual reverse gradient connections were introduced to aid the feature representation network in better HEAs component characterization using limited data.**
-- **Based on the obtained high-precision performance predictor, HEAs compositions with exceptional performance were reverse-engineered and experimentally validated.**
+- **Based on the obtained high-precision performance predictor and [the candidate experimental scheme selection pipeline based on GPT-4](https://github.com/yuyouyu32/MaterialFilter), HEAs compositions with exceptional performance were reverse-engineered and experimentally validated.**
 
 ## Installation
 
@@ -153,3 +153,7 @@ UTS            0.803639  0.127405     15675
 EL             0.849998  1.2308       48.3007
 ```
 
+## Eval
+
+Details of the process for screening candidate solutions for materials experiments based on `LLMs` can be found [here](https://github.com/yuyouyu32/MaterialFilter)
+![GPT Filter](./imgs/GPT.png)
