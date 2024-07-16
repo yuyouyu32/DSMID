@@ -1,6 +1,6 @@
 # AAEG
 
-***Paper title: From Adversarial Embedding to Large Language Model Screening: A Dual-Strategy for Inverse Design of High Entropy Alloys***
+**Paper Title:** ***From Small Data Modeling to Large Language Model Screening: A Dual-Strategy for Materials Intelligent Design***
 ![AAEG Framework](./imgs/AAEG.png)
 
 ### Highlight
@@ -9,6 +9,10 @@
 - **A coupled feature representation and adversarial generation domain adaptation network was proposed to narrow the domain shift between various target performance HEAs datasets.**
 - **Covariance distance and residual reverse gradient connections were introduced to aid the feature representation network in better HEAs component characterization using limited data.**
 - **Based on the obtained high-precision performance predictor and [the candidate experimental scheme selection pipeline based on GPT-4](https://github.com/yuyouyu32/MaterialFilter), HEAs compositions with exceptional performance were reverse-engineered and experimentally validated.**
+
+### Abstract
+
+Small data in materials present significant challenges to constructing highly accurate machine learning models, severely hindering the widespread implementation of data-driven materials R&D. While transfer learning can improve model precision with limited data, the scarcity of material compositions and the high cost of material properties characterization continue to impede its practical utility. This study introduces a Adversarial Autoencoder Transfer(AAEG) framework to efficiently encode sparse alloy compositions, augmenting information density and enhancing model prediction accuracy to facilitate efficient design of high-entropy alloys(HEAs). Additionally, to address the challenge of screening and evaluating numerous experimental candidates, large language models(LLMs) are introduced to integrate domain knowledge and establish an automated pipeline for streamlined screening and evaluation through selfretrieval and self-summarization thought-chain processes. Experiments demonstrate that among 1030 HEA candidate designs, this approach swiftly identifies and prepares eutectic HEAs, achieving an ultimate tensile strength(UTS) of 1085 MPa and 24% elongation(EL) without heat treatment or extra processing, aligning with green manufacturing and exhibiting exemplary performance. The proposed AAEG effectively tackles the material small data modeling and expedites efficient screening of huge experimental candidates, offering a promising avenue for material intelligent design in scenarios constrained by limited data availability. All data and code are available at https://github.com/yuyouyu32/AAEG.
 
 ## Installation
 
