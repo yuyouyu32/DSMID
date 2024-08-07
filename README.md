@@ -1,7 +1,7 @@
 # AAEG
 
 **Paper Title:** ***From Small Data Modeling to Large Language Model Screening: A Dual-Strategy for Materials Intelligent Design***
-![AAEG Framework](./imgs/AAEG.png)
+![DSMID Framework](./imgs/graph_abstract.png)
 
 ### Highlight
 
