@@ -1,8 +1,10 @@
-# AAEG
+# DSMID
 
 **Paper Title:** ***From Small Data Modeling to Large Language Model Screening: A Dual-Strategy for Materials Intelligent Design***
-![DSMID Framework](./imgs/graph_abstract.png)
 
+The **Dual-Strategy Materials Intelligent Design Framework (DSMID)** is proposed to tackle the challenges of small data in materials intelligent design. By enhancing property prediction and efficiently screening experimental candidates, DSMID successfully identifies a new eutectic High Entropy Alloy with significantly improved plasticity and strength, providing a powerful solution for material intelligent design in data-constrained scenarios.
+
+![DSMID ToC](./imgs/ToC.png)
 ### Highlight
 
 - **Expanded statistics on elements were used to densify sparse material composition matrices and align constituent features of the source and target domains.**
@@ -12,7 +14,9 @@
 
 ### Abstract
 
-Small data in materials present significant challenges to constructing highly accurate machine learning models, severely hindering the widespread implementation of data-driven materials R&D. While transfer learning can improve model precision with limited data, the scarcity of material compositions and the high cost of material properties characterization continue to impede its practical utility. This study introduces a Adversarial Autoencoder Transfer(AAEG) framework to efficiently encode sparse alloy compositions, augmenting information density and enhancing model prediction accuracy to facilitate efficient design of high-entropy alloys(HEAs). Additionally, to address the challenge of screening and evaluating numerous experimental candidates, large language models(LLMs) are introduced to integrate domain knowledge and establish an automated pipeline for streamlined screening and evaluation through selfretrieval and self-summarization thought-chain processes. Experiments demonstrate that among 1030 HEA candidate designs, this approach swiftly identifies and prepares eutectic HEAs, achieving an ultimate tensile strength(UTS) of 1085 MPa and 24% elongation(EL) without heat treatment or extra processing, aligning with green manufacturing and exhibiting exemplary performance. The proposed AAEG effectively tackles the material small data modeling and expedites efficient screening of huge experimental candidates, offering a promising avenue for material intelligent design in scenarios constrained by limited data availability. All data and code are available at https://github.com/yuyouyu32/AAEG.
+Small data in materials present significant challenges to constructing highly accurate machine learning models, severely hindering the widespread implementation of data-driven materials intelligent design. In this study, we introduce the Dual-Strategy Materials Intelligent Design Framework (DSMID), which integrates two innovative methods. The Adversarial domain Adaptive Embedding Generative network (AAEG) transfers data between related property datasets, even with only 90 data points, enhancing material composition characterization and improving property prediction. Additionally, to address the challenge of screening and evaluating numerous alloy designs, we implemented the Automated Material Screening and Evaluation Pipeline (AMSEP). This pipeline utilizes large language models with extensive domain knowledge to efficiently identify promising experimental candidates through self-retrieval and self-summarization. Experimental findings demonstrate that this approach effectively identifies and prepares new eutectic High Entropy Alloy (EHEA), notably $\text{Al}{14}\text{(CoCrFe)}{19}\text{Ni}_{28}$, achieving an ultimate tensile strength of 1085 MPa and 24\% elongation without heat treatment or extra processing. This demonstrates significantly greater plasticity and equivalent strength compared to the typical as-cast eutectic HEA $\text{AlCoCrFeNi}_{2.1}$. The DSMID framework, combining AAEG and AMSEP, addresses the challenges of small data modeling and extensive candidate screening, contributing to cost reduction and enhanced efficiency of material design. This framework offers a promising avenue for intelligent material design, particularly in scenarios constrained by limited data availability. All data and code are available at \href{https://github.com/yuyouyu32/DSMID}{https://github.com/yuyouyu32/DSMID}.
+
+![DSMID Framework](./imgs/graph_abstract.png)
 
 ## Installation
 
