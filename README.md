@@ -2,7 +2,7 @@
 
 **Paper Title:** ***From Small Data Modeling to Large Language Model Screening: A Dual-Strategy for Materials Intelligent Design***
 
-> In our paper, the material cost is represented as $\text{Al}_{14}\text{(CoCrFe)}_{19}\text{Ni}_{28}$. The total composition does not sum to 100% due to the use of the `round()` function. The complete composition is as follows: $\text{Al}_{14.28}\text{(CoCrFe)}_{19.05}\text{Ni}_{28.57}$.
+> In our paper, the material cost is represented as $\text{Al}_{14}(\text{CoCrFe})_{19}\text{Ni}_{28}$. The total composition does not sum to 100% due to the use of the `round()` function. The complete composition is as follows: $\text{Al}_{14.28}(\text{CoCrFe})_{19.05}\text{Ni}_{28.57}$.
 
 
 The **Dual-Strategy Materials Intelligent Design Framework (DSMID)** is proposed to tackle the challenges of small data in materials intelligent design. By enhancing property prediction and efficiently screening experimental candidates, DSMID successfully identifies a new eutectic High Entropy Alloy with significantly improved plasticity and strength, providing a powerful solution for material intelligent design in data-constrained scenarios.
