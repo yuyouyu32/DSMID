@@ -1,6 +1,6 @@
 # DSMID
 
-**Paper Title:** [***From Small Data Modeling to Large Language Model Screening: A Dual-Strategy for Materials Intelligent Design***](https://advanced.onlinelibrary.wiley.com/doi/10.1002/advs.202403548?af=R)--published in [***Advanced Science***].
+**Paper Title:** [***From Small Data Modeling to Large Language Model Screening: A Dual-Strategy for Materials Intelligent Design***](https://advanced.onlinelibrary.wiley.com/doi/10.1002/advs.202403548?af=R)--published in ***Advanced Science***.
 
 > In our paper, the material cost is represented as Al14(CoCrFe)19Ni28. The total composition does not sum to 100% due to the use of the `round()` function. The complete composition is as follows: Al14.28(CoCrFe)19.05Ni28.57.
 
